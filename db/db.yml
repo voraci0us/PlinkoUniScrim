@@ -1,0 +1,109 @@
+---
+- name: Install and configure MySQL Server on Windows Server 2016 using Chocolatey
+  hosts: db*
+  gather_facts: yes
+  tasks:
+    - name: Install MySQL Server using Chocolatey
+      win_chocolatey:
+        name: chocolatey
+        state: present
+
+    - name: Install MySQL Server using Chocolatey
+      win_chocolatey:
+        name: mysql
+        state: present
+
+    - name: Ensure MySQL Service is started
+      win_service:
+        name: mysql
+        start_mode: auto
+        state: started
+      ignore_errors: true # Use ignore_errors if you are not sure about the exact service name
+
+    - name: Get current system PATH
+      win_command: powershell.exe "[System.Environment]::GetEnvironmentVariable('PATH', 'Machine')"
+      register: current_path
+
+    - name: Append new directory to PATH if not already present
+      win_environment:
+        state: present
+        name: PATH
+        value: "{{ current_path.stdout }};C:\\tools\\mysql\\current\\bin"
+        level: machine
+      when: "'C:\\tools\\mysql\\current\\bin' not in current_path.stdout"
+
+    - name: Ensure C:\Temp directory exists
+      win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Make copy of database dump
+      copy:
+        src: ./mysql.db
+        dest: "./tmp/mysql{{ inventory_hostname }}.db"
+        force: true
+      delegate_to: localhost
+
+    - name: Extract integer X from hostname
+      set_fact:
+        host_integer: "{{ ansible_hostname | regex_search('([0-9]+)') | first }}"
+
+    - name: Construct web hostname
+      set_fact:
+        web_hostname: "web{{ host_integer }}"
+
+    - name: Get web IP
+      set_fact:
+        web_ip: "{{ hostvars[web_hostname]['ansible_host'] }}"
+
+    - name: Replace string
+      ansible.builtin.replace:
+        path: "./tmp/mysql{{ inventory_hostname }}.db"
+        regexp: 'localhost'
+        replace: "{{ web_ip }}"
+      delegate_to: localhost
+      delegate_facts: true
+
+    - name: Replace string
+      ansible.builtin.replace:
+        path: "./tmp/mysql{{ inventory_hostname }}.db"
+        regexp: '198\.18\.1\.17'
+        replace: "{{ web_ip }}"
+      delegate_to: localhost
+      delegate_facts: true
+
+    - name: Copy database dump file to remote server
+      win_copy:
+        src: "./tmp/mysql{{ inventory_hostname }}.db"
+        dest: C:\Temp\mysql.db 
+
+    - name: Create MySQL database
+      win_shell: |
+        mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;"
+      args:
+        executable: cmd.exe
+
+    - name: Create root user
+      win_shell: |
+        mysql -u root -e "CREATE USER IF NOT EXISTS 'wordpress'@'%' identified by 'wordpress';"
+      args:
+        executable: cmd.exe
+
+    - name: Allow remote login for root user
+      win_shell: |
+        mysql -u root -e "GRANT ALL PRIVILEGES ON *.* to 'wordpress'@'%';"
+      args:
+        executable: cmd.exe
+
+    - name: Flush privileges
+      win_shell: |
+        mysql -u root -e "FLUSH PRIVILEGES;"
+      args:
+        executable: cmd.exe
+
+    - name: Import database
+      win_shell: |
+        mysql -u root wordpress < C:\Temp\mysql.db
+      args:
+        executable: cmd.exe 
+
