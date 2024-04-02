@@ -1,0 +1,24 @@
+{
+  "name": "||item||web-app",
+  "type": "http",
+  "score_weight": 1,
+  "definition": {
+    "requests": [
+      {
+        "host": "{{.Host}}",
+        "path": "/",
+        "https": false,
+        "port": 80,
+        "method": "GET",
+        "matchcode": true,
+        "matchcontent": true,
+        "contentregex": "Brightline Fan Club"
+      }
+    ]
+  },
+  "attributes": {
+    "admin": {
+      "Host": "web||item||"
+    }
+  }
+}

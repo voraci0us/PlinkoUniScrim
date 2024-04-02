@@ -1,0 +1,24 @@
+{
+  "name": "||item||db-mysql",
+  "type": "mysql",
+  "score_weight": 1,
+  "definition": {
+    "Host": "{{.Host}}",
+    "Username": "{{.Username}}",
+    "Password": "{{.Password}}",
+    "Database": "mysql",
+    "Table": "db",
+    "Column": "Db",
+    "MatchContent": "true",
+    "ContentRegex": "performance_schema"
+  },
+  "attributes": {
+    "admin": {
+      "Host": "db||item||",
+      "Username": "wordpress"
+    },
+    "user": {
+      "Password": "wordpress"
+    }
+  }
+}
