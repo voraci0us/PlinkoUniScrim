@@ -6,10 +6,10 @@
     users:
       - plinko
       - redteam
+      - kanye
       - alice
       - bob
       - charlie
-      - ccdc
       - david
       - eve
       - frank
@@ -18,6 +18,14 @@
   become: True
 
   tasks:
+  - name: Create users
+    user:
+      name: "{{ item }}"
+      password: "{{ password }}"
+      state: present
+      createhome: yes
+    loop: "{{ users }}"
+
   - name: Install dependecies
     ansible.builtin.apt:
       name: "{{ packages }}"

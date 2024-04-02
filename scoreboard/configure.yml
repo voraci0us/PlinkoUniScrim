@@ -16,13 +16,23 @@
         state: directory
         mode: '0755'  # Sets the permissions for the directory
         recurse: yes
-    - name: Create web checks
+
+    - name: Create web HTTP checks
       template:
         src: web-app.j2  # Path to your Jinja2 template
         dest: "/scorestack/dynamicbeat/checks/web-app-{{ item }}.json"  # Destination path and file name including the index
         variable_start_string: "||"
         variable_end_string: "||"
-      loop: "{{ range(0, 10) }}"      
+      loop: "{{ range(0, 10) }}"
+      
+    - name: Create web SSH checks
+      template:
+        src: web-ssh.j2  # Path to your Jinja2 template
+        dest: "/scorestack/dynamicbeat/checks/web-ssh-{{ item }}.json"  # Destination path and file name including the index
+        variable_start_string: "||"
+        variable_end_string: "||"
+      loop: "{{ range(0, 10) }}"   
+
     - name: Create db checks
       template:
         src: db-mysql.j2  # Path to your Jinja2 template

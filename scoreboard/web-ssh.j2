@@ -1,0 +1,22 @@
+{
+  "name": "||item||web-ssh",
+  "type": "ssh",
+  "score_weight": 1,
+  "definition": {
+    "Host": "{{.Host}}",
+    "Port": "22",
+    "Username": "{{.Username}}",
+    "Password": "{{.Password}}",
+    "Cmd": "id",
+    "MatchContent": "false"
+  },
+  "attributes": {
+    "admin": {
+      "Host": "web||item||",
+      "Username": "charlie"
+    },
+    "user": {
+      "Password": "Plink0P@ssw0rd"
+    }
+  }
+}
