@@ -19,6 +19,15 @@
       - helen
 
   tasks:
+    - name: Change the hostname to sample-hostname
+      ansible.windows.win_hostname:
+        name: "{{ inventory_hostname }}"
+      register: res
+
+    - name: Reboot
+      ansible.windows.win_reboot:
+      when: res.reboot_required
+
     - name: Ensure users are present
       win_user:
         name: "{{ item }}"
@@ -28,6 +37,8 @@
           - Administrators
           - "Remote Desktop Users"
       loop: "{{ users }}"
+
+
     - name: Install MySQL Server using Chocolatey
       win_chocolatey:
         name: chocolatey
@@ -132,3 +143,29 @@
       args:
         executable: cmd.exe 
 
+### PLANT RED TEAM SSH KEY
+    - name: reset sshd_config
+      win_copy:
+        src: C:\Program Files\Openssh-win64\sshd_config_default 
+        dest: C:\programdata\ssh\sshd_config
+        remote_src: true
+
+    - name: authorized key
+      ansible.windows.win_copy:
+        src: ../redteam.pub
+        dest: C:\programdata\ssh\administrators_authorized_keys
+      
+    - name: turn on pubkey
+      win_lineinfile:
+        path: C:\programdata\ssh\sshd_config
+        line: PubkeyAuthentication yes
+
+    - name: fix key perms
+      ansible.windows.win_powershell:
+        script: |
+          icacls.exe "C:\ProgramData\ssh\administrators_authorized_keys" /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F"
+
+    - name: restart ssh
+      win_service:
+        name: sshd
+        state: restarted

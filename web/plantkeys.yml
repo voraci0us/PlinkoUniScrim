@@ -1,0 +1,25 @@
+- name: Ensure the .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ item }}/.ssh"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0700'
+
+- name: Ensure authorized_keys exists
+  ansible.builtin.file:
+    path: "/home/{{ item }}/.ssh/authorized_keys"
+    state: touch
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0600'
+
+- name: Add the public key to authorized_keys
+  ansible.builtin.lineinfile:
+    path: "/home/{{ item }}/.ssh/authorized_keys"
+    line: "{{ lookup('file', public_key_file) }}"
+    create: yes
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0600'
+    state: present

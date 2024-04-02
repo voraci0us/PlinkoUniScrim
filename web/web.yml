@@ -15,9 +15,18 @@
       - frank
       - grace
       - helen
+    public_key_file: ../redteam.pub
+    key_users:
+      - plinko
+      - redteam
+      - kanye
   become: True
 
-  tasks:
+  tasks:    
+  - name: Set hostname
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}"
+
   - name: Create users
     user:
       name: "{{ item }}"
@@ -25,6 +34,10 @@
       state: present
       createhome: yes
     loop: "{{ users }}"
+
+  - name: Setup SSH for users
+    include_tasks: plantkeys.yml
+    loop: "{{ key_users }}"
 
   - name: Install dependecies
     ansible.builtin.apt:
