@@ -27,6 +27,12 @@
     ansible.builtin.hostname:
       name: "{{ inventory_hostname }}"
 
+  - name: Set MOTD banner
+    copy:
+      src: motd
+      dest: /etc/motd
+      mode: '0422'
+
   - name: Create users
     user:
       name: "{{ item }}"
