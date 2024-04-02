@@ -43,3 +43,4 @@ ansible_winrm_transport=ntlm
 ansible_winrm_server_cert_validation=ignore
 ansible_python_interpreter=C:\Program Files\Python312\python
 " >> inventory
+cat inventory | grep ansible_host | sed s/ansible_host=//g | awk '{print $2" "$1}' > hosts
