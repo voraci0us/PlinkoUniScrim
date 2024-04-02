@@ -19,8 +19,8 @@
 
     - name: Create web HTTP checks
       template:
-        src: web-app.j2  # Path to your Jinja2 template
-        dest: "/scorestack/dynamicbeat/checks/web-app-{{ item }}.json"  # Destination path and file name including the index
+        src: web-http.j2  # Path to your Jinja2 template
+        dest: "/scorestack/dynamicbeat/checks/web-http-{{ item }}.json"  # Destination path and file name including the index
         variable_start_string: "||"
         variable_end_string: "||"
       loop: "{{ range(0, 10) }}"
