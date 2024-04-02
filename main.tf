@@ -84,7 +84,7 @@ resource "openstack_compute_instance_v2" "db" {
 resource "openstack_compute_instance_v2" "scorestack" {
   name            = "SCRIM_scorestack"
   image_id	  = data.openstack_images_image_v2.ubuntu_22.id
-  flavor_name     = "m1.medium"
+  flavor_name     = "m1.large"
   key_pair        = "Terraform"
   security_groups = ["default"]
   user_data       = "${file("userdata_linux.conf")}"
