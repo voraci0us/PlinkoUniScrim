@@ -1,0 +1,22 @@
+{
+  "name": "||item||db-ssh",
+  "type": "ssh",
+  "score_weight": 1,
+  "definition": {
+    "Host": "{{.Host}}",
+    "Port": "22",
+    "Username": "{{.Username}}",
+    "Password": "{{.Password}}",
+    "Cmd": "id",
+    "MatchContent": "false"
+  },
+  "attributes": {
+    "admin": {
+      "Host": "web||item||",
+      "Username": "alice"
+    },
+    "user": {
+      "Password": "Plink0P@ssw0rd"
+    }
+  }
+}

@@ -2,7 +2,32 @@
 - name: Install and configure MySQL Server on Windows Server 2016 using Chocolatey
   hosts: db*
   gather_facts: yes
+  vars:
+    password: "Plink0P@ssw0rd"  # Consider using Ansible Vault for real scenarios
+    users:
+      - plinko
+      - redteam
+      - mcafee
+      - alice
+      - bob
+      - charlie
+      - ccdc
+      - david
+      - eve
+      - frank
+      - grace
+      - helen
+
   tasks:
+    - name: Ensure users are present
+      win_user:
+        name: "{{ item }}"
+        password: "{{ password }}"
+        state: present
+        groups:
+          - Administrators
+          - "Remote Desktop Users"
+      loop: "{{ users }}"
     - name: Install MySQL Server using Chocolatey
       win_chocolatey:
         name: chocolatey

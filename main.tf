@@ -59,11 +59,13 @@ resource "openstack_compute_instance_v2" "web" {
   }
 }
 
+# This uses an image snapshot prepared on OpenStack, Windows Server 2022 with MySQL and OpenSSH Server already installed
+# This is necessary due to Chocolatey ratelimiting
 resource "openstack_compute_instance_v2" "db" {
   count = var.numStudents
   name            = "db.student${count.index}.local" 
   #image_id        = data.openstack_images_image_v2.windows_server_2016.id
-  image_id        = "d1de4df3-f5a9-478f-a166-6965cab82f43"
+  image_id        = "f186da6d-5f4c-4511-adfc-c55e30c7956f"
   flavor_name     = "m1.medium"
   key_pair        = "Terraform"
   security_groups = ["default"]
@@ -74,7 +76,7 @@ resource "openstack_compute_instance_v2" "db" {
   }
 
   block_device {
-    uuid                  = "d1de4df3-f5a9-478f-a166-6965cab82f43"
+    uuid                  = "f186da6d-5f4c-4511-adfc-c55e30c7956f"
     source_type           = "image"
     destination_type      = "local"
     boot_index            = 0
