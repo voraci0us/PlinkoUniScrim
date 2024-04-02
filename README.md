@@ -32,6 +32,23 @@ ansible-playbook scorestack/configure.yml
 This playbook will hang indefinitely, kill it to stop scorechecks from running.
 You can access ScoreStack in the web browser, `https://<scorestack-ip>:5601`.
 
+## Reversions
+To revert a box, first delete it in OpenStack. \
+Recreate the box:
+```
+terraform apply -auto-approve
+./generateHosts.sh
+```
+Configure it with one of these commands (limiting to only that team number):
+```
+ansible-playbook web/web.yml --limit webX
+ansible-playbook db/db.yml --limit dbX
+```
+Update hosts file on scoring engine:
+```
+ansible-playbook scorestack/hosts.yml
+```
+
 ## Blue Team Packet
 
 You have two systems: \
