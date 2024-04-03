@@ -1,5 +1,5 @@
 {
-  "name": "||item||db-ssh",
+  "name": "db-ssh",
   "type": "ssh",
   "score_weight": 1,
   "definition": {
@@ -12,7 +12,7 @@
   },
   "attributes": {
     "admin": {
-      "Host": "web||item||",
+      "Host": "web{{.TeamNum}}",
       "Username": "alice"
     },
     "user": {

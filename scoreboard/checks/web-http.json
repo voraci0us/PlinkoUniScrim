@@ -1,5 +1,5 @@
 {
-  "name": "||item||web-http",
+  "name": "web-http",
   "type": "http",
   "score_weight": 1,
   "definition": {
@@ -18,7 +18,7 @@
   },
   "attributes": {
     "admin": {
-      "Host": "web||item||"
+      "Host": "web{{.TeamNum}}"
     }
   }
 }

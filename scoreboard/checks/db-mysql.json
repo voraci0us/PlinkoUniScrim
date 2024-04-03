@@ -1,5 +1,5 @@
 {
-  "name": "||item||db-mysql",
+  "name": "db-mysql",
   "type": "mysql",
   "score_weight": 1,
   "definition": {
@@ -14,7 +14,7 @@
   },
   "attributes": {
     "admin": {
-      "Host": "db||item||",
+      "Host": "db{{.TeamNum}}",
       "Username": "wordpress"
     },
     "user": {

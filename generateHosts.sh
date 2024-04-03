@@ -1,5 +1,5 @@
 #!/bin/bash
-endIndex=$((`terraform output -raw numStudents`-1))
+endIndex=$((`terraform output -raw numStudents`))
 echo > inventory # clear out old inventory file
 
 
@@ -8,16 +8,16 @@ echo "[scorestack]" >> inventory
 echo "scorestack ansible_host=$ip" >> inventory
 
 echo "[db]" >> inventory
-for i in `seq 0 $endIndex`
+for i in `seq 1 $endIndex`
 do
-    ip=`terraform output -json ip_addresses | jq .db[$i] | tr -d '"'`
+    ip=`terraform output -json ip_addresses | jq .db[$i-1] | tr -d '"'`
     echo "db$i ansible_host=$ip" >> inventory
 done
 
 echo "[web]" >> inventory
-for i in `seq 0 $endIndex`
+for i in `seq 1 $endIndex`
 do
-    ip=`terraform output -json ip_addresses | jq .web[$i] | tr -d '"'`
+    ip=`terraform output -json ip_addresses | jq .web[$i-1] | tr -d '"'`
     echo "web$i ansible_host=$ip" >> inventory
 done
 

@@ -34,12 +34,12 @@ data "openstack_images_image_v2" "ubuntu_22" {
 
 variable "numStudents" {
   type = number
-  default = 1
+  default = 4
 }
 
 resource "openstack_compute_instance_v2" "web" {
   count = var.numStudents
-  name            = "web.student${count.index}.local"
+  name            = "web${count.index+1}"
   image_id        = data.openstack_images_image_v2.ubuntu_22.id
   flavor_name       = "m1.small"
   key_pair        = "Terraform"
@@ -63,7 +63,7 @@ resource "openstack_compute_instance_v2" "web" {
 # This is necessary due to Chocolatey ratelimiting
 resource "openstack_compute_instance_v2" "db" {
   count = var.numStudents
-  name            = "db.student${count.index}.local" 
+  name            = "db${count.index+1}" 
   #image_id        = data.openstack_images_image_v2.windows_server_2016.id
   image_id        = "f186da6d-5f4c-4511-adfc-c55e30c7956f"
   flavor_name     = "m1.medium"

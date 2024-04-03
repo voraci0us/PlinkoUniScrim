@@ -11,43 +11,14 @@
         path: /etc/hosts
         block: "{{ hosts_file }}" 
 
-    - file:
-        path: /scorestack/dynamicbeat/checks
-        state: directory
-        mode: '0755'  # Sets the permissions for the directory
-        recurse: yes
-
-    - name: Create web HTTP checks
-      template:
-        src: web-http.j2  # Path to your Jinja2 template
-        dest: "/scorestack/dynamicbeat/checks/web-http-{{ item }}.json"  # Destination path and file name including the index
-        variable_start_string: "||"
-        variable_end_string: "||"
-      loop: "{{ range(0, 10) }}"
-
-    - name: Create web SSH checks
-      template:
-        src: web-ssh.j2  # Path to your Jinja2 template
-        dest: "/scorestack/dynamicbeat/checks/web-ssh-{{ item }}.json"  # Destination path and file name including the index
-        variable_start_string: "||"
-        variable_end_string: "||"
-      loop: "{{ range(0, 10) }}"   
-
-    - name: Create db MySQL checks
-      template:
-        src: db-mysql.j2  # Path to your Jinja2 template
-        dest: "/scorestack/dynamicbeat/checks/db-mysql-{{ item }}.json"  # Destination path and file name including the index
-        variable_start_string: "||"
-        variable_end_string: "||"
-      loop: "{{ range(0, 10) }}"
-
-    - name: Create db SSH checks
-      template:
-        src: db-ssh.j2  # Path to your Jinja2 template
-        dest: "/scorestack/dynamicbeat/checks/db-ssh-{{ item }}.json"  # Destination path and file name including the index
-        variable_start_string: "||"
-        variable_end_string: "||"
-      loop: "{{ range(0, 10) }}"
+    - name: Copy checks folder to remote
+      ansible.builtin.copy:
+        src: ./checks
+        dest: /scorestack/dynamicbeat/
+        owner: root
+        group: root
+        mode: '0755'
+        directory_mode: yes
 
     - name: Setup Dynamicbeat checks
       shell: ./dynamicbeat setup checks checks/
