@@ -1,0 +1,9 @@
+---
+- name: Stops OpenSSH service on db boxes
+  hosts: db
+  gather_facts: false
+  tasks:
+    - win_service:
+        name: sshd
+        start_mode: disabled
+        state: stopped

@@ -1,0 +1,9 @@
+---
+- name: Stops MySQL service on db boxes
+  hosts: db
+  gather_facts: false
+  tasks:
+    - win_service:
+        name: mysql
+        start_mode: disabled
+        state: stopped
