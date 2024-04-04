@@ -1,0 +1,9 @@
+---
+- name: Stops Apache2 service on web boxes
+  hosts: web
+  become: true
+  gather_facts: false
+  tasks:
+    - service:
+        name: apache2
+        state: stopped

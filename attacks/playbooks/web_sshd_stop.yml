@@ -1,0 +1,9 @@
+---
+- name: Stops SSH service on web boxes
+  hosts: web
+  become: true
+  gather_facts: false
+  tasks:
+    - service:
+        name: sshd
+        state: stopped
