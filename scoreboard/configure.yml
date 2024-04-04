@@ -20,8 +20,13 @@
         mode: '0755'
         directory_mode: yes
 
+    - name: Copy ScoreStack config
+      copy:
+        src: ./scorestackConfig.yml
+        dest: /scorestack/dynamicbeat/scorestackConfig.yml
+
     - name: Setup Dynamicbeat checks
-      shell: ./dynamicbeat setup checks checks/
+      shell: ./dynamicbeat setup checks checks/ --config scorestackConfig.yml
       args:
         chdir: /scorestack/dynamicbeat/
 

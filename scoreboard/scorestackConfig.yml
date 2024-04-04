@@ -1,0 +1,24 @@
+elasticsearch: https://localhost:9200
+log:
+  level: 0
+  no_color: false
+  verbose: false
+password: changeme
+round_time: 30s
+setup:
+  kibana: https://localhost:5601
+  password: changeme
+  username: elastic
+teams:
+- name: team1
+- name: team2
+- name: team3
+- name: team4
+- name: team5
+- name: team6
+- name: team7
+- name: team8
+- name: team9
+- name: team10
+username: dynamicbeat
+verify_certs: false

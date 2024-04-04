@@ -49,7 +49,12 @@
         dest: /scorestack/dynamicbeat/dynamicbeat
         mode: '0777'
 
+    - name: Copy ScoreStack config
+      copy:
+        src: ./scorestackConfig.yml
+        dest: /scorestack/dynamicbeat/scorestackConfig.yml
+
     - name: Setup Dynamicbeat
-      shell: ./dynamicbeat setup
+      shell: ./dynamicbeat setup --config scorestackConfig.yml
       args:
         chdir: /scorestack/dynamicbeat/
